@@ -16,7 +16,7 @@ export class DepartmentsService {
   constructor(
     @InjectRepository(Department)
     private departmentRepository: Repository<Department>,
-  ) {}
+  ) { }
 
   async create(createDepartmentDto: CreateDepartmentDto) {
     const existingDepartment = await this.departmentRepository.findOne({
@@ -113,6 +113,7 @@ export class DepartmentsService {
     }
 
     department.isDeleted = true;
+    await this.departmentRepository.save(department);
     await this.departmentRepository.softRemove(department);
 
     return {
