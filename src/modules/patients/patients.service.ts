@@ -186,6 +186,7 @@ export class PatientsService {
     }
 
     patient.isDeleted = true;
+    await this.patientRepository.save(patient);
     await this.patientRepository.softRemove(patient);
 
     return {

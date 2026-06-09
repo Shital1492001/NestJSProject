@@ -113,6 +113,7 @@ export class DepartmentsService {
     }
 
     department.isDeleted = true;
+    await this.departmentRepository.save(department);
     await this.departmentRepository.softRemove(department);
 
     return {
