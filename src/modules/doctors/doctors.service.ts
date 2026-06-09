@@ -160,6 +160,7 @@ export class DoctorsService {
       throw new NotFoundException('Doctor not found');
     }
 
+    doctor.isDeleted = true;
     await this.doctorRepository.softRemove(doctor);
 
     return {

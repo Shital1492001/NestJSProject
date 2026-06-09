@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  Column,
 } from 'typeorm';
 
 export abstract class BaseEntity {
@@ -17,4 +18,7 @@ export abstract class BaseEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt: Date;
+
+  @Column({ name: 'is_deleted', type: 'boolean', default: false })
+  isDeleted: boolean;
 }
