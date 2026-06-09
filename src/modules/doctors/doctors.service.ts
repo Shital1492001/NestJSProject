@@ -161,6 +161,7 @@ export class DoctorsService {
     }
 
     doctor.isDeleted = true;
+    await this.doctorRepository.save(doctor);
     await this.doctorRepository.softRemove(doctor);
 
     return {
