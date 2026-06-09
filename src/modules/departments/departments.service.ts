@@ -112,6 +112,7 @@ export class DepartmentsService {
       throw new ForbiddenException('Cannot delete department with associated doctors');
     }
 
+    department.isDeleted = true;
     await this.departmentRepository.softRemove(department);
 
     return {

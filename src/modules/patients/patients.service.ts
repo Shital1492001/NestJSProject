@@ -185,6 +185,7 @@ export class PatientsService {
       throw new NotFoundException('Patient not found');
     }
 
+    patient.isDeleted = true;
     await this.patientRepository.softRemove(patient);
 
     return {
