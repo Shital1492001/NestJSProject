@@ -2,6 +2,8 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -22,14 +24,12 @@ export class DoctorsService {
     private userRepository: Repository<User>,
   ) { }
 
-  async create(
-    createDoctorDto: CreateDoctorDto,
-    userId: number,
-    userRole: UserRole,
-  ) {
-    if (userRole !== UserRole.ADMIN && userRole !== UserRole.DOCTOR) {
-      throw new ForbiddenException('Only admins and doctors can create doctor profiles');
+  async create(createDoctorDto: CreateDoctorDto, userRole: UserRole) {
+    if (userRole !== UserRole.ADMIN) {
+      throw new ForbiddenException('Only admins can create doctor profiles');
     }
+
+    const { userId, ...doctorData } = createDoctorDto;
 
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -39,20 +39,22 @@ export class DoctorsService {
       throw new NotFoundException('User not found');
     }
 
-    // if (user.role !== UserRole.DOCTOR) {
-    //   throw new ForbiddenException('User must be a doctor to create a doctor profile');
-    // }
+    if (user.role !== UserRole.DOCTOR) {
+      throw new BadRequestException(
+        'Doctor profile can only be created for a user with the DOCTOR role',
+      );
+    }
 
     const existingDoctor = await this.doctorRepository.findOne({
       where: { user: { id: userId } },
     });
 
     if (existingDoctor) {
-      throw new ForbiddenException('Doctor profile already exists for this user');
+      throw new ConflictException('Doctor profile already exists for this user');
     }
 
     const doctor = this.doctorRepository.create({
-      ...createDoctorDto,
+      ...doctorData,
       user,
     });
 

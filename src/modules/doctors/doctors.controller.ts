@@ -33,11 +33,11 @@ export class DoctorsController {
   constructor(private readonly doctorsService: DoctorsService) { }
 
   @Post()
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Create a new doctor profile' })
+  @ApiOperation({ summary: 'Create a new doctor profile (admin only)' })
   async create(@Body() createDoctorDto: CreateDoctorDto, @Request() req) {
-    return this.doctorsService.create(createDoctorDto, req.user.sub, req.user.role);
+    return this.doctorsService.create(createDoctorDto, req.user.role);
   }
 
   @Get()

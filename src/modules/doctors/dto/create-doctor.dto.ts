@@ -2,6 +2,11 @@ import { IsString, IsInt, IsNumber, IsOptional, IsNotEmpty } from 'class-validat
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateDoctorDto {
+  @ApiProperty({ example: 1, description: 'ID of the user (role DOCTOR) this profile belongs to' })
+  @IsInt()
+  @IsNotEmpty()
+  userId: number;
+
   @ApiProperty({ example: 'Cardiology' })
   @IsString()
   @IsNotEmpty()
